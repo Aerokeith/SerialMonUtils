@@ -26,23 +26,32 @@
 
 
 /* serialMonCmdClass::processCommands()
+    Called periodically from the main loop (at least 5 times/sec). If menu command mode (cmdMode) is not currently active,
+    processCommands() checks if a character is available to read from the Serial Monitor keyboard. If not, the function 
+    returns immediately. If a character is available, it is read and compared to the defined "command mode trigger" character,
+    (cmdModeChar) which by default is the <ESC> character. If commmand mode is triggered, the top-level menu function previously
+    specified using serialMonClass::initMenu() is executed. 
+    If command mode is already active, the available character is read and appended to the current command line using 
+    serialMonInputClass::getCmdLine(). If this function indicates that a complete line has been assembled, the current 
+    user menu function is called to execute the command. 
+
   Parameters: 
     bool enable: if true, all command processing is inhibited and the function returns immediately
   Returns: None
 */
 void serialMonCmdClass::processCommands(bool enable) {
-  if (!enable)
+  if (!enable)  // if command mode is globally disabled, return immediately
     return;
-  if (!cmdMode) {
-    if (Serial.available()) {
-      if (Serial.read() == cmdModeChar) {
-        if (initMenuFuncP == NULL) {
+  if (!cmdMode) {     // if not already in command mode
+    if (Serial.available()) {               // if a char is availbale to read
+      if (Serial.read() == cmdModeChar) {   // check if it's the "command mode trigger" char
+        if (initMenuFuncP == NULL) {        // return if no top-level user menu fucntion has been specified
           Serial.printf("\nRoot command menu has not been set!\n");
           return;
         }
-        cmdMode = true;
-        menuFuncP = initMenuFuncP;
-        (*menuFuncP)(PROMPT);
+        cmdMode = true;             // now in command mode  
+        menuFuncP = initMenuFuncP;  // continue executing top-level menu until soemthing else is specified
+        (*menuFuncP)(PROMPT);       // print the top-level menu prompt
       }
       else return;  // not in command mode. Received char, but not the one to trigger command mode
     }
