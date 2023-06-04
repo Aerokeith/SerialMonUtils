@@ -97,17 +97,19 @@ char serialMonInputClass::getCmdChar() {
       float: Converted substring
 */
 float serialMonInputClass::getFloatParam(bool *error) {
-  char *endPtr;
+  // char *endPtr;
   float retVal;
 
   if (!scanToNum()) {   // scan in the buffer to find a valid floating point string
     *error = true;      // no float value found
     return (0);         // return 0
   }
-  retVal = strtof(bufP, &endPtr);   // convert the string found, and get pointer to next char past the float
-  bufP = endPtr;                    // move bufP past the float
-  *error = false;     // no error
-  return (retVal);    // return converted value
+  retVal = atof(bufP);  // convert the string found
+  // retVal = strtof(bufP, &endPtr);   // convert the string found, and get pointer to next char past the float
+  // bufP = endPtr;                    // move bufP past the float
+  skipPast();           // skip past the numerical string, in preparation for additional parameters
+  *error = false;       // no error
+  return (retVal);      // return converted value
 }
 
 
@@ -120,17 +122,19 @@ float serialMonInputClass::getFloatParam(bool *error) {
       int: Converted substring
 */
 int serialMonInputClass::getIntParam(bool *error) {
-  char *endPtr;
+  // char *endPtr;
   float retVal;
 
   if ((!scanToNum()) || (*bufP == '.')){   // scan in the buffer to find a valid integer string
     *error = true;      // no integer value found
     return (0);         // return 0
   }
-  retVal = (int) strtol(bufP, &endPtr, 10);   // convert the string found, and get pointer to next char past the float
-  bufP = endPtr;      // move bufP past the float
-  *error = false;     // no error
-  return (retVal);    // return converted value
+  retVal = atoi(bufP);  // convert the string found
+  // retVal = (int) strtol(bufP, &endPtr, 10);   // convert the string found, and get pointer to next char past the float
+  // bufP = endPtr;      // move bufP past the float
+  skipPast();           // skip past the numerical string, in preparation for additional parameters
+  *error = false;       // no error
+  return (retVal);      // return converted value
 }
 
 
@@ -172,6 +176,19 @@ void serialMonInputClass::clearLine() {
 */
 void serialMonInputClass::skipBlanks() {
   while (isblank(*bufP) && (*bufP != '\0')) {
+    bufP++;
+  }
+}
+
+
+/* serialMonInputClass::skipPast()
+    Advances bufP from its current position in the buffer to the position of the next blank character
+    or a null string terminator ('\0'). Used to skip past a numerical parameter string after it has been converted.
+  Parameters: None
+  Returns: None
+*/
+void serialMonInputClass::skipPast() {
+  while (!isblank(*bufP) && (*bufP != '\0')) {
     bufP++;
   }
 }

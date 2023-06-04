@@ -9,7 +9,8 @@ const char escChar = '\x1B';      // ASCII ESC character, used for multiple purp
 class serialMonInputClass {
   char buf[maxInputLen];      // buffer to hold a single command line
   char *bufP;                 // pointer to buf, used both for adding and reading characters
-  void skipBlanks();          
+  void skipBlanks();  
+  void skipPast();        
   bool scanToNum();
 public:
   serialMonInputClass() { bufP = buf; *bufP = '\0'; }   // class object constructor; initialize buffer and bufP

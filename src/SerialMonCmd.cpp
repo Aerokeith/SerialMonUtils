@@ -46,7 +46,7 @@ void serialMonCmdClass::processCommands(bool enable) {
     if (Serial.available()) {               // if a char is availbale to read
       if (Serial.read() == cmdModeChar) {   // check if it's the "command mode trigger" char
         if (initMenuFuncP == NULL) {        // return if no top-level user menu fucntion has been specified
-          Serial.printf("\nRoot command menu has not been set!\n");
+          Serial.println("\nRoot command menu has not been set!");
           return;
         }
         cmdMode = true;             // now in command mode  
@@ -60,7 +60,7 @@ void serialMonCmdClass::processCommands(bool enable) {
   else {    // already in command mode
     if (input.getCmdLine()) {     // terminated command line has been received
       if (menuFuncP == NULL) {
-        Serial.printf("\nCommand menu has not been initialized!\n");
+        Serial.println("\nCommand menu has not been initialized!");
         return;
       }
       if (input.escape) {         // if escape char received to pop up a menu level
