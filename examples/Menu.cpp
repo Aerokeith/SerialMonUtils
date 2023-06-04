@@ -106,7 +106,8 @@ void menuLevel1(execTypeEnum execType) {
         case '\0':
         break;
         default:
-          Serial.printf("Unknown command: [%c]\n", cmdChar);
+          Serial.print("Unknown command: ");
+          Serial.println(cmdChar);
         break;
       }
     break;
