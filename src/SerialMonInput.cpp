@@ -1,7 +1,7 @@
 /* SerialMonInput
     SerialMonInput.h and SerialMonInput.cpp implement the serialMonInputClass, which provides Serial Monitor input
     (and some output) functions that support the serialMonCmdClass (see SerialMonCmd.cpp) and user-defined command
-    menus that utilize serialMonCmdClass. All of the functions are non-blocking, emaing that they never loop while
+    menus that utilize serialMonCmdClass. All of the functions are non-blocking, meaning that they never loop while
     waiting for user input. 
     The functions most likely to be used directly in the implementation of a user-defined command menu (UI) are:
       serialMonInputClass::getCmdChar() - fetch the next single-character command from a previously assembled command line.
